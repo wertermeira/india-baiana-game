@@ -71,31 +71,31 @@ export const UI_MESSAGES = {
   memes: [
     'Moto Fantasma',
     'Seta Decorativa',
-    'Ultrapassagem Impossivel',
-    'Contramao Premium',
-    'Discussao Iniciada',
+    'Ultrapassagem Impossível',
+    'Contramão Premium',
+    'Discussão Iniciada',
     'Pickup da Pressa',
-    'Freada Filosofica',
-    'Mercadao em horario de pico',
+    'Freada Filosófica',
+    'Mercadão em horário de pico',
   ],
   gameOver: [
-    'Voce foi fechado por uma moto invisivel.',
+    'Você foi fechado por uma moto invisível.',
     'Quem estava errado discutiu mais alto.',
     'A seta era apenas decorativa.',
-    'Voce perdeu para a logica do transito local.',
-    'A contramao confiou no destino.',
+    'Você perdeu para a lógica do trânsito local.',
+    'A contramão confiou no destino.',
     'A pickup decidiu que duas faixas eram dela.',
   ],
 };
 
 export const IRECE_SIGNS = [
-  'Praca Cleriston Andrade',
-  'Praca Teotonio Marques',
+  'Praça Clériston Andrade',
+  'Praça Teotônio Marques',
   'Av. Primeiro de Janeiro',
-  'Mercadao',
-  'Irece',
-  'Capital do Feijao',
-  'Espaco Sao Joao',
+  'Mercadão',
+  'Irecê',
+  'Capital do Feijão',
+  'Espaço São João',
 ];
 
 export const PALETTE = {

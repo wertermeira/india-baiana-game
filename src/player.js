@@ -1,41 +1,22 @@
 import * as THREE from 'https://unpkg.com/three@0.160.1/build/three.module.js';
 import { PLAYER_CONFIG, WORLD_CONFIG } from './config.js';
 import { clamp } from './utils.js';
+import { createVehicleModel } from './vehicle-models.js';
 
 export function createPlayer(scene) {
-  const group = new THREE.Group();
-  const materials = {
-    body: new THREE.MeshLambertMaterial({ color: 0xf94144 }),
-    cabin: new THREE.MeshLambertMaterial({ color: 0xffd166 }),
-    wheel: new THREE.MeshLambertMaterial({ color: 0x1c1c1c }),
-    detail: new THREE.MeshLambertMaterial({ color: 0xffffff }),
-  };
-
-  const body = new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.8, 4.2), materials.body);
-  body.position.y = 0.75;
-  group.add(body);
-
-  const cabin = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.7, 1.7), materials.cabin);
-  cabin.position.set(0, 1.2, -0.1);
-  group.add(cabin);
-
-  const hoodDetail = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.12, 0.65), materials.detail);
-  hoodDetail.position.set(0, 1.02, -1.45);
-  group.add(hoodDetail);
-
-  const wheelGeometry = new THREE.BoxGeometry(0.32, 0.36, 0.82);
-  const wheelPositions = [
-    [-1.08, 0.32, -1.25],
-    [1.08, 0.32, -1.25],
-    [-1.08, 0.32, 1.25],
-    [1.08, 0.32, 1.25],
-  ];
-
-  wheelPositions.forEach(([x, y, z]) => {
-    const wheel = new THREE.Mesh(wheelGeometry, materials.wheel);
-    wheel.position.set(x, y, z);
-    group.add(wheel);
+  const { group, halfWidth, halfDepth } = createVehicleModel({
+    type: 'car',
+    bodyColor: 0xf94144,
+    cabinColor: 0xfff1b8,
+    trimColor: 0x1c1c1c,
   });
+
+  const stripe = new THREE.Mesh(
+    new THREE.BoxGeometry(0.36, 0.08, 2.5),
+    new THREE.MeshLambertMaterial({ color: 0xfffef2 })
+  );
+  stripe.position.set(0, 0.86, 0.1);
+  group.add(stripe);
 
   scene.add(group);
 
@@ -95,7 +76,7 @@ export function createPlayer(scene) {
     group.position.x += lateralVelocity * dt;
 
     const roadHalfWidth = (WORLD_CONFIG.laneCount * WORLD_CONFIG.laneWidth) / 2;
-    const xLimit = roadHalfWidth - PLAYER_CONFIG.halfWidth - 0.3;
+    const xLimit = roadHalfWidth - halfWidth - 0.3;
     group.position.x = clamp(group.position.x, -xLimit, xLimit);
     group.rotation.z = -horizontalInput * PLAYER_CONFIG.tiltStrength;
   }
@@ -120,8 +101,8 @@ export function createPlayer(scene) {
     return {
       x: group.position.x,
       z: group.position.z,
-      halfWidth: PLAYER_CONFIG.halfWidth,
-      halfDepth: PLAYER_CONFIG.halfDepth,
+      halfWidth,
+      halfDepth,
     };
   }
 

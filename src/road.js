@@ -136,7 +136,7 @@ function createMarket() {
   hall.position.y = 1.55;
   market.add(hall);
 
-  const sign = createSign('Mercadao', 'billboard');
+  const sign = createSign('Mercadão', 'billboard');
   sign.position.set(0, 0.2, 1.7);
   market.add(sign);
 
@@ -214,13 +214,13 @@ function createRoadSegment(index) {
     if (featureRoll === 0) {
       feature = createSign(choice(IRECE_SIGNS));
     } else if (featureRoll === 1) {
-      feature = createSign('Capital do Feijao', 'billboard');
+      feature = createSign('Capital do Feijão', 'billboard');
     } else if (featureRoll === 2) {
       feature = createMarket();
     } else if (featureRoll === 3) {
       feature = createPraza();
     } else {
-      feature = createSign('Irece', 'billboard');
+      feature = createSign('Irecê', 'billboard');
     }
 
     feature.position.set(side * (buildingOffset - 1.2), 0, rand(-6.5, 6.5));
