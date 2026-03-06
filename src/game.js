@@ -102,6 +102,7 @@ export class Game {
     this.traffic.reset();
     this.ui.hideGameOver();
     this.ui.showStartScreen();
+    this.ui.setGameplayUIVisible(false);
     this.ui.updateHUD(0, 0);
     this.ui.setSaveEnabled(true);
     this.ui.setSaveStatus('');
@@ -113,6 +114,7 @@ export class Game {
     this.isGameOver = false;
     this.ui.hideStartScreen();
     this.ui.hideGameOver();
+    this.ui.setGameplayUIVisible(true);
     this.player.setControlsEnabled(true);
     this.ui.showMemeMessage(choice(UI_MESSAGES.memes));
   }
@@ -170,6 +172,7 @@ export class Game {
     this.isRunning = false;
     this.recordSaved = false;
     this.player.setControlsEnabled(false);
+    this.ui.setGameplayUIVisible(false);
 
     this.ui.setSaveEnabled(true);
     this.ui.setSaveStatus(

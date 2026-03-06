@@ -57,6 +57,36 @@ export function createPlayer(scene) {
   window.addEventListener('keydown', (event) => updateKey(event, true));
   window.addEventListener('keyup', (event) => updateKey(event, false));
 
+  function bindTouchButton(elementId, keyName) {
+    const button = document.getElementById(elementId);
+    if (!button) {
+      return;
+    }
+
+    const press = (event) => {
+      event.preventDefault();
+      keys[keyName] = true;
+      button.classList.add('is-pressed');
+    };
+
+    const release = (event) => {
+      event.preventDefault();
+      keys[keyName] = false;
+      button.classList.remove('is-pressed');
+    };
+
+    button.addEventListener('pointerdown', press);
+    button.addEventListener('pointerup', release);
+    button.addEventListener('pointerleave', release);
+    button.addEventListener('pointercancel', release);
+    button.addEventListener('lostpointercapture', release);
+  }
+
+  bindTouchButton('touch-left', 'left');
+  bindTouchButton('touch-right', 'right');
+  bindTouchButton('touch-accel', 'accelerate');
+  bindTouchButton('touch-brake', 'brake');
+
   function update(dt) {
     if (!controlsEnabled) {
       lateralVelocity = 0;

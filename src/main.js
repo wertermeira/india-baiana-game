@@ -15,6 +15,7 @@ const camera = new THREE.PerspectiveCamera(58, RENDER_CONFIG.internalWidth / REN
 
 const game = new Game({ scene, camera, renderer });
 const clock = new THREE.Clock();
+const loadingScreen = document.getElementById('loading-screen');
 
 function resize() {
   const { width, height } = root.getBoundingClientRect();
@@ -32,3 +33,14 @@ function loop() {
 }
 
 loop();
+
+if (loadingScreen) {
+  const presentationDurationMs = 3000 + Math.random() * 2000;
+  window.setTimeout(() => {
+    loadingScreen.classList.add('loading-screen--hide');
+    window.setTimeout(() => {
+      loadingScreen.classList.remove('loading-screen--visible');
+      loadingScreen.remove();
+    }, 420);
+  }, presentationDurationMs);
+}

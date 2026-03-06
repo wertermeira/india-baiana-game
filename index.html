@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>India Baiana Driver - Irecê edition></Irec></title>
+    <title>India Baiana Driver - Irecê edition</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -11,36 +11,69 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./style.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            screens: {
+              xs: '420px',
+            },
+          },
+        },
+      };
+    </script>
   </head>
   <body>
-    <div class="page-shell">
+    <div id="loading-screen" class="loading-screen loading-screen--visible" aria-live="polite">
+      <div class="loading-screen__content">
+        <img
+          src="./assets/image.png"
+          alt="Capa de apresentação do game"
+          class="loading-screen__cover"
+        />
+        <p class="loading-screen__title">India Baiana Driver</p>
+        <p class="loading-screen__subtitle">Carregando caos em Irecê<span class="loading-dots"></span></p>
+      </div>
+    </div>
+    <div class="page-shell px-3 xs:px-4 sm:px-6">
       <div class="noise"></div>
-      <main class="game-shell">
-        <section class="hud">
+      <main class="game-shell w-full max-w-[1180px]">
+        <section class="hud flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
           <div class="hud__title">
             <span class="hud__eyebrow">Arcade do caos</span>
-            <h1>India Baiana Driver - Irecê edition</h1>
+            <h1 class="text-[0.95rem] xs:text-[1.05rem] sm:text-[1.2rem]">India Baiana Driver - Irecê edition</h1>
           </div>
-          <div class="hud__stats">
-            <div class="stat-card">
+          <div id="hud-stats" class="hud__stats is-hidden grid grid-cols-2 gap-2 xs:gap-3 sm:flex sm:flex-wrap">
+            <div class="stat-card min-w-0">
               <span class="stat-card__label">Score</span>
-              <strong id="score-value">000000</strong>
+              <strong id="score-value" class="text-[1.05rem] xs:text-[1.25rem] sm:text-[1.7rem]">000000</strong>
             </div>
-            <div class="stat-card">
+            <div class="stat-card min-w-0">
               <span class="stat-card__label">Tempo</span>
-              <strong id="time-value">00:00</strong>
+              <strong id="time-value" class="text-[1.05rem] xs:text-[1.25rem] sm:text-[1.7rem]">00:00</strong>
             </div>
           </div>
         </section>
 
-        <div class="game-frame">
+        <div class="game-frame min-h-[72vh] sm:min-h-[74vh]">
           <div id="game-root" class="game-root"></div>
           <div id="meme-banner" class="meme-banner" aria-live="polite"></div>
+          <div id="touch-controls" class="touch-controls is-hidden" aria-label="Controles touch">
+            <div class="touch-controls__left">
+              <button id="touch-left" class="touch-btn" type="button" aria-label="Virar à esquerda">◀</button>
+              <button id="touch-right" class="touch-btn" type="button" aria-label="Virar à direita">▶</button>
+            </div>
+            <div class="touch-controls__right">
+              <button id="touch-brake" class="touch-btn touch-btn--brake" type="button" aria-label="Frear">FREIO</button>
+              <button id="touch-accel" class="touch-btn touch-btn--accel" type="button" aria-label="Acelerar">GÁS</button>
+            </div>
+          </div>
 
-          <div id="start-screen" class="overlay overlay--visible">
-            <div class="panel panel--hero">
+          <div id="start-screen" class="overlay overlay--visible p-3 xs:p-4 sm:p-6">
+            <div class="panel panel--hero w-full max-w-[680px] p-4 xs:p-5 sm:p-6">
               <p class="panel__kicker">Irecê edition</p>
-              <h2>Sobreviva ao trânsito mais imprevisível do sertão meme.</h2>
+              <h2 class="text-[0.95rem] xs:text-[1.05rem] sm:text-[1.2rem]">Sobreviva ao trânsito mais imprevisível do sertão meme.</h2>
               <p class="panel__text">
                 Desvie de motos costurando, pickups folgadas e contramão premium.
               </p>
@@ -49,24 +82,24 @@
                 <span>Mercadão arcade</span>
                 <span>Capital do feijão</span>
               </div>
-              <button id="start-button" class="arcade-button" type="button">
+              <button id="start-button" class="arcade-button w-full sm:w-auto" type="button">
                 Iniciar corrida
               </button>
               <p class="panel__controls">
-                A/D ou setas para virar • W acelera • S freia
+                A/D ou setas para virar • W acelera • S freia • no celular use os botões na tela
               </p>
-              <section class="leaderboard-box">
+              <section class="leaderboard-box mt-4">
                 <h3>Top 5</h3>
                 <ol id="top5-start" class="leaderboard-list"></ol>
               </section>
             </div>
           </div>
 
-          <div id="game-over-screen" class="overlay overlay--hidden">
-            <div class="panel panel--gameover">
+          <div id="game-over-screen" class="overlay overlay--hidden p-3 xs:p-4 sm:p-6">
+            <div class="panel panel--gameover w-full max-w-[700px] p-4 xs:p-5 sm:p-6">
               <p class="panel__kicker">Game over</p>
-              <h2>O trânsito venceu.</h2>
-              <div class="results-grid">
+              <h2 class="text-[0.95rem] xs:text-[1.05rem] sm:text-[1.2rem]">O trânsito venceu.</h2>
+              <div class="results-grid grid grid-cols-1 xs:grid-cols-2">
                 <div>
                   <span>Score final</span>
                   <strong id="final-score">000000</strong>
@@ -80,9 +113,9 @@
 
               <div class="record-save">
                 <label for="player-name">Seu nome</label>
-                <div class="record-save__row">
+                <div class="record-save__row grid grid-cols-1 sm:grid-cols-[1fr_auto]">
                   <input id="player-name" type="text" maxlength="18" placeholder="Digite seu nome" />
-                  <button id="save-record-button" class="arcade-button arcade-button--small" type="button">
+                  <button id="save-record-button" class="arcade-button arcade-button--small w-full sm:w-auto" type="button">
                     Salvar recorde
                   </button>
                 </div>
@@ -94,11 +127,11 @@
                 <ol id="top5-gameover" class="leaderboard-list"></ol>
               </section>
 
-              <div class="actions-row">
-                <button id="restart-button" class="arcade-button arcade-button--danger" type="button">
+              <div class="actions-row grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <button id="restart-button" class="arcade-button arcade-button--danger w-full" type="button">
                   Jogar novamente
                 </button>
-                <button id="menu-button" class="arcade-button arcade-button--ghost" type="button">
+                <button id="menu-button" class="arcade-button arcade-button--ghost w-full" type="button">
                   Voltar ao menu principal
                 </button>
               </div>

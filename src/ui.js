@@ -3,6 +3,8 @@ import { formatTime } from './utils.js';
 export function createUI() {
   const scoreValue = document.getElementById('score-value');
   const timeValue = document.getElementById('time-value');
+  const hudStats = document.getElementById('hud-stats');
+  const touchControls = document.getElementById('touch-controls');
   const memeBanner = document.getElementById('meme-banner');
   const startScreen = document.getElementById('start-screen');
   const gameOverScreen = document.getElementById('game-over-screen');
@@ -100,6 +102,12 @@ export function createUI() {
     saveRecordButton.disabled = !enabled;
   }
 
+  function setGameplayUIVisible(visible) {
+    const method = visible ? 'remove' : 'add';
+    hudStats.classList[method]('is-hidden');
+    touchControls.classList[method]('is-hidden');
+  }
+
   function renderLeaderboard(records) {
     top5Start.innerHTML = '';
     top5GameOver.innerHTML = '';
@@ -150,6 +158,7 @@ export function createUI() {
     setPlayerName,
     setSaveStatus,
     setSaveEnabled,
+    setGameplayUIVisible,
     renderLeaderboard,
   };
 }
