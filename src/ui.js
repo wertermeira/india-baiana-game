@@ -4,6 +4,9 @@ export function createUI() {
   const scoreValue = document.getElementById('score-value');
   const timeValue = document.getElementById('time-value');
   const hudStats = document.getElementById('hud-stats');
+  const inGameTopbar = document.getElementById('in-game-topbar');
+  const inGameBackButton = document.getElementById('in-game-back-button');
+  const inGameShareButton = document.getElementById('in-game-share-button');
   const touchControls = document.getElementById('touch-controls');
   const memeBanner = document.getElementById('meme-banner');
   const startScreen = document.getElementById('start-screen');
@@ -39,6 +42,14 @@ export function createUI() {
 
   function bindBackToMenu(handler) {
     menuButton.addEventListener('click', handler);
+  }
+
+  function bindInGameBack(handler) {
+    inGameBackButton.addEventListener('click', handler);
+  }
+
+  function bindInGameShare(handler) {
+    inGameShareButton.addEventListener('click', handler);
   }
 
   function bindSaveRecord(handler) {
@@ -128,9 +139,13 @@ export function createUI() {
     const method = visible ? 'remove' : 'add';
     hudStats.classList[method]('is-hidden');
     touchControls.classList[method]('is-hidden');
+    inGameTopbar.classList[method]('is-hidden');
 
-    if (window.matchMedia('(hover: none), (pointer: coarse)').matches) {
-      document.body.classList.toggle('game-running-mobile', visible);
+    document.body.classList.toggle('game-running', visible);
+    if (!visible) {
+      document.body.classList.remove('game-running-mobile');
+    } else if (window.matchMedia('(hover: none), (pointer: coarse)').matches) {
+      document.body.classList.add('game-running-mobile');
     }
   }
 
@@ -176,6 +191,8 @@ export function createUI() {
     bindRestart,
     bindShareGlobal,
     bindBackToMenu,
+    bindInGameBack,
+    bindInGameShare,
     bindSaveRecord,
     updateHUD,
     showMemeMessage,

@@ -226,6 +226,36 @@ textarea {
   image-rendering: crisp-edges;
 }
 
+.in-game-topbar {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  z-index: 6;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.in-game-icon-btn {
+  width: 38px;
+  height: 38px;
+  border: 3px solid #1b1414;
+  border-radius: 8px;
+  background: rgba(255, 237, 182, 0.92);
+  color: #241716;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.75rem;
+  line-height: 1;
+  box-shadow: var(--pixel-shadow);
+  pointer-events: auto;
+}
+
+.in-game-icon-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.32);
+}
+
 .touch-controls {
   position: absolute;
   left: 0;
@@ -494,6 +524,27 @@ textarea {
   text-decoration: underline;
 }
 
+body.game-running .page-shell {
+  padding: 0;
+}
+
+body.game-running #hud-section,
+body.game-running #share-bar,
+body.game-running #home-top5-section,
+body.game-running #creator-credit {
+  display: none !important;
+}
+
+body.game-running .game-shell {
+  width: 100%;
+  max-width: 100%;
+  gap: 0;
+}
+
+body.game-running .game-frame {
+  min-height: 100vh;
+}
+
 .arcade-button {
   padding: 14px 20px;
   border: 4px solid #1a120f;
@@ -703,5 +754,12 @@ textarea {
     border: 0;
     border-radius: 0;
     box-shadow: none;
+  }
+
+  .in-game-icon-btn {
+    width: 34px;
+    height: 34px;
+    font-size: 0.62rem;
+    border-width: 2px;
   }
 }

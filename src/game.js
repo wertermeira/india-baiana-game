@@ -77,6 +77,11 @@ export class Game {
   bindUI() {
     this.ui.bindStart(() => this.start());
     this.ui.bindShareGlobal(() => this.shareCurrentContext());
+    this.ui.bindInGameBack(() => {
+      this.reset();
+      this.ui.showStartScreen();
+    });
+    this.ui.bindInGameShare(() => this.shareCurrentContext());
     this.ui.bindRestart(() => {
       this.reset();
       this.start();
@@ -300,14 +305,16 @@ export class Game {
   }
 
   async shareCurrentContext() {
+    const gameLink = window.location.href;
+
     if (Number.isFinite(this.lastFinishedScore)) {
-      const text = `Consegui ${this.lastFinishedScore} pontos no India Baiana Driver, agora é sua vez!`;
+      const text = `Consegui ${this.lastFinishedScore} pontos no India Baiana Driver, agora é sua vez! ${gameLink}`;
       await this.shareText(text);
       return;
     }
 
     const text =
-      'Estou jogando India Baiana Driver em Irecê. Vem tentar sobreviver ao trânsito meme!';
+      `Estou jogando India Baiana Driver em Irecê. Vem tentar sobreviver ao trânsito meme! ${gameLink}`;
     await this.shareText(text);
   }
 
