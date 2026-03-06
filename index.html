@@ -45,6 +45,7 @@
         },
       };
     </script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=arrow_top_left,share" />
   </head>
   <body>
     <div id="loading-screen" class="loading-screen loading-screen--visible" aria-live="polite">
@@ -62,9 +63,12 @@
       <div class="noise"></div>
       <main class="game-shell w-full max-w-[1180px]">
         <section id="hud-section" class="hud flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-          <div class="hud__title">
-            <span class="hud__eyebrow">Arcade do caos</span>
-            <h1 class="text-[0.95rem] xs:text-[1.05rem] sm:text-[1.2rem]">India Baiana Driver - Irecê edition</h1>
+          <div class="hud__title flex flex-wrap gap-2">
+            <div class="hud__eyebrow flex flex-wrap gap-1">
+              <span>
+                Arcade do caos
+              </span>
+            </div>
           </div>
           <div id="hud-stats" class="hud__stats is-hidden grid grid-cols-2 gap-2 xs:gap-3 sm:flex sm:flex-wrap">
             <div class="stat-card min-w-0">
@@ -82,8 +86,16 @@
           <div id="game-root" class="game-root"></div>
           <div id="meme-banner" class="meme-banner" aria-live="polite"></div>
           <div id="in-game-topbar" class="in-game-topbar is-hidden">
-            <button id="in-game-back-button" class="in-game-icon-btn" type="button" aria-label="Voltar ao menu">←</button>
-            <button id="in-game-share-button" class="in-game-icon-btn" type="button" aria-label="Compartilhar">⤴</button>
+            <button id="in-game-back-button" class="in-game-icon-btn" type="button" aria-label="Voltar ao menu">
+              <span class="material-symbols-outlined">
+                arrow_top_left
+              </span> 
+            </button>
+            <button id="in-game-share-button" class="in-game-icon-btn" type="button" aria-label="Compartilhar">
+              <span class="material-symbols-outlined">
+                share
+              </span>
+            </button>
           </div>
           <div id="touch-controls" class="touch-controls is-hidden" aria-label="Controles touch">
             <div class="touch-controls__left">
@@ -155,16 +167,16 @@
           <button id="share-global-button" class="arcade-button arcade-button--ghost w-full sm:w-auto" type="button">
             Compartilhar jogo
           </button>
+          <p id="creator-credit" class="creator-credit text-lg">
+            Criado por
+            <a href="https://instagram.com/wertermeira" target="_blank" rel="noopener noreferrer">@wertermeira</a>
+          </p>
           <p id="share-status-global" class="share-status"></p>
         </section>
         <section id="home-top5-section" class="leaderboard-box home-top5">
           <h3>Top 5</h3>
           <ol id="top5-home" class="leaderboard-list"></ol>
         </section>
-        <p id="creator-credit" class="creator-credit text-lg">
-          Criado por
-          <a href="https://instagram.com/wertermeira" target="_blank" rel="noopener noreferrer">@wertermeira</a>
-        </p>
       </main>
     </div>
 
