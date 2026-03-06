@@ -8,6 +8,7 @@ export function createUI() {
   const memeBanner = document.getElementById('meme-banner');
   const startScreen = document.getElementById('start-screen');
   const gameOverScreen = document.getElementById('game-over-screen');
+  const homeTop5Section = document.getElementById('home-top5-section');
   const recordSaveBox = document.getElementById('record-save-box');
   const finalScore = document.getElementById('final-score');
   const finalTime = document.getElementById('final-time');
@@ -138,6 +139,15 @@ export function createUI() {
     recordSaveBox.classList[method]('is-hidden');
   }
 
+  function setRankingVisible(visible) {
+    const method = visible ? 'remove' : 'add';
+    homeTop5Section.classList[method]('is-hidden');
+    if (!visible) {
+      setRecordFormVisible(false);
+      setSaveStatus('');
+    }
+  }
+
   function renderLeaderboard(records) {
     top5Home.innerHTML = '';
 
@@ -181,6 +191,7 @@ export function createUI() {
     setShareButtonLabel,
     setGameplayUIVisible,
     setRecordFormVisible,
+    setRankingVisible,
     renderLeaderboard,
   };
 }

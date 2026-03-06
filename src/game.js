@@ -2,6 +2,7 @@ import * as THREE from 'https://unpkg.com/three@0.160.1/build/three.module.js';
 import {
   DIFFICULTY_CONFIG,
   PLAYER_CONFIG,
+  RANKING_CONFIG,
   RENDER_CONFIG,
   SCORE_CONFIG,
   UI_MESSAGES,
@@ -35,6 +36,7 @@ export class Game {
     this.recordSaved = false;
     this.lastFinishedScore = null;
     this.hasStoredProfile = false;
+    this.rankingEnabled = Boolean(RANKING_CONFIG.enabled);
 
     this.ui = createUI();
     this.player = createPlayer(scene);
@@ -43,9 +45,14 @@ export class Game {
 
     this.setupScene();
     this.bindUI();
-    this.prefillUserName();
+    if (this.rankingEnabled) {
+      this.prefillUserName();
+    }
+    this.ui.setRankingVisible(this.rankingEnabled);
     this.reset();
-    this.refreshLeaderboard();
+    if (this.rankingEnabled) {
+      this.refreshLeaderboard();
+    }
   }
 
   setupScene() {
@@ -82,6 +89,10 @@ export class Game {
   }
 
   async refreshLeaderboard() {
+    if (!this.rankingEnabled) {
+      return;
+    }
+
     try {
       const topRecords = await fetchTopRecords();
       this.ui.renderLeaderboard(topRecords);
@@ -109,10 +120,10 @@ export class Game {
     this.ui.hideGameOver();
     this.ui.showStartScreen();
     this.ui.setGameplayUIVisible(false);
-    this.ui.setRecordFormVisible(!this.hasStoredProfile);
+    this.ui.setRecordFormVisible(this.rankingEnabled && !this.hasStoredProfile);
     this.ui.updateHUD(0, 0);
     this.ui.setSaveEnabled(true);
-    this.ui.setSaveStatus('');
+    this.ui.setSaveStatus(this.rankingEnabled ? '' : 'Ranking desativado nesta versão.');
     this.ui.setShareStatus('');
     this.ui.setShareButtonLabel('Compartilhar jogo');
     this.updateCamera();
@@ -184,15 +195,17 @@ export class Game {
     this.lastFinishedScore = Math.floor(this.score);
     this.player.setControlsEnabled(false);
     this.ui.setGameplayUIVisible(false);
-    this.ui.setRecordFormVisible(!this.hasStoredProfile);
+    this.ui.setRecordFormVisible(this.rankingEnabled && !this.hasStoredProfile);
     this.exitMobileFullscreen();
 
-    this.ui.setSaveEnabled(true);
-    this.ui.setSaveStatus(
-      isUsingFirebase()
-        ? 'Pronto para salvar no Firebase.'
-        : 'Firebase não configurado: salvando localmente neste navegador.'
-    );
+    if (this.rankingEnabled) {
+      this.ui.setSaveEnabled(true);
+      this.ui.setSaveStatus(
+        isUsingFirebase()
+          ? 'Pronto para salvar no Firebase.'
+          : 'Firebase não configurado: salvando localmente neste navegador.'
+      );
+    }
 
     this.ui.showGameOver({
       score: this.score,
@@ -201,12 +214,16 @@ export class Game {
     });
     this.ui.setShareButtonLabel('Compartilhar score');
 
-    if (this.hasStoredProfile) {
+    if (this.rankingEnabled && this.hasStoredProfile) {
       this.autoSaveBestScore();
     }
   }
 
   async saveCurrentRecord() {
+    if (!this.rankingEnabled) {
+      return;
+    }
+
     if (!this.isGameOver) {
       return;
     }
@@ -241,6 +258,10 @@ export class Game {
   }
 
   async autoSaveBestScore() {
+    if (!this.rankingEnabled) {
+      return;
+    }
+
     try {
       const result = await saveOrUpdateUserBestScore({
         name: this.ui.getPlayerName(),

@@ -67,6 +67,10 @@ export const DIFFICULTY_CONFIG = {
   memeMaxDelay: 8,
 };
 
+export const RANKING_CONFIG = {
+  enabled: false,
+};
+
 export const UI_MESSAGES = {
   memes: [
     'Moto Fantasma',
@@ -77,6 +81,7 @@ export const UI_MESSAGES = {
     'Pickup da Pressa',
     'Freada Filosófica',
     'Mercadão em horário de pico',
+    'Praça do Feijão',
   ],
   gameOver: [
     'Você foi fechado por uma moto invisível.',

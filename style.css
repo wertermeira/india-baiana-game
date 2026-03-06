@@ -479,6 +479,21 @@ textarea {
   margin-top: 8px;
 }
 
+.creator-credit {
+  margin: 8px 0 0;
+  text-align: center;
+  color: rgba(255, 245, 220, 0.72);
+}
+
+.creator-credit a {
+  color: rgba(190, 232, 255, 0.9);
+  text-decoration: none;
+}
+
+.creator-credit a:hover {
+  text-decoration: underline;
+}
+
 .arcade-button {
   padding: 14px 20px;
   border: 4px solid #1a120f;
@@ -611,6 +626,10 @@ textarea {
 
   .results-grid span {
     font-size: 0.75rem;
+  }
+
+  .creator-credit {
+    font-size: 0.68rem;
   }
 
   .record-save input {
