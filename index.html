@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>India Baiana Driver</title>
+    <title>India Baiana Driver - Irecê edition></Irec></title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -19,7 +19,7 @@
         <section class="hud">
           <div class="hud__title">
             <span class="hud__eyebrow">Arcade do caos</span>
-            <h1>India Baiana Driver</h1>
+            <h1>India Baiana Driver - Irecê edition</h1>
           </div>
           <div class="hud__stats">
             <div class="stat-card">
@@ -55,6 +55,10 @@
               <p class="panel__controls">
                 A/D ou setas para virar • W acelera • S freia
               </p>
+              <section class="leaderboard-box">
+                <h3>Top 5</h3>
+                <ol id="top5-start" class="leaderboard-list"></ol>
+              </section>
             </div>
           </div>
 
@@ -73,9 +77,31 @@
                 </div>
               </div>
               <p id="game-over-message" class="panel__text"></p>
-              <button id="restart-button" class="arcade-button arcade-button--danger" type="button">
-                Jogar novamente
-              </button>
+
+              <div class="record-save">
+                <label for="player-name">Seu nome</label>
+                <div class="record-save__row">
+                  <input id="player-name" type="text" maxlength="18" placeholder="Digite seu nome" />
+                  <button id="save-record-button" class="arcade-button arcade-button--small" type="button">
+                    Salvar recorde
+                  </button>
+                </div>
+                <p id="save-status" class="save-status"></p>
+              </div>
+
+              <section class="leaderboard-box leaderboard-box--compact">
+                <h3>Top 5</h3>
+                <ol id="top5-gameover" class="leaderboard-list"></ol>
+              </section>
+
+              <div class="actions-row">
+                <button id="restart-button" class="arcade-button arcade-button--danger" type="button">
+                  Jogar novamente
+                </button>
+                <button id="menu-button" class="arcade-button arcade-button--ghost" type="button">
+                  Voltar ao menu principal
+                </button>
+              </div>
             </div>
           </div>
         </div>

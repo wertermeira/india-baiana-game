@@ -105,8 +105,22 @@ export const PALETTE = {
   grass: 0x8cb25e,
   pole: 0x5a4b4b,
   light: 0xfff3c7,
-  building: [0xd95d39, 0xffc857, 0x5f7ad6, 0x47a36b, 0xb562d6],
+  building: [0xd95d39, 0xffc857, 0x5f7ad6, 0x47a36b, 0xb562d6, 0x5090b5, 0xd1786a],
+  buildingWindow: [0xd6f2ff, 0xf6f7ff, 0xfff4d5, 0xb8e7ff],
+  buildingTrim: [0x40261f, 0x2d2738, 0x1d3b45, 0x524024],
   car: [0xff4f4f, 0x4cc4ff, 0xffd84d, 0x64e291, 0xff8c42],
   pickup: [0xf15bb5, 0x00bbf9, 0xfee440],
   moto: [0xffffff, 0xff5e5b, 0x7bdff2],
+};
+
+export const FIREBASE_COLLECTION = 'records';
+
+// Preencha com as credenciais do seu projeto Firebase para ativar o Top 5 em nuvem.
+export const FIREBASE_CONFIG = {
+  apiKey: '',
+  authDomain: '',
+  projectId: '',
+  storageBucket: '',
+  messagingSenderId: '',
+  appId: '',
 };

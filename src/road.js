@@ -34,68 +34,6 @@ function createPixelLabel(text, width = 160, height = 64, background = '#ffe57e'
   return texture;
 }
 
-function createBuilding() {
-  const building = new THREE.Group();
-  const width = rand(2.4, 4.2);
-  const height = rand(3.6, 7.5);
-  const depth = rand(2.2, 3.4);
-  const color = choice(PALETTE.building);
-
-  const base = new THREE.Mesh(
-    new THREE.BoxGeometry(width, height, depth),
-    new THREE.MeshLambertMaterial({ color })
-  );
-  base.position.y = height / 2;
-  building.add(base);
-
-  const awning = new THREE.Mesh(
-    new THREE.BoxGeometry(width * 0.9, 0.3, depth * 0.6),
-    new THREE.MeshLambertMaterial({ color: 0xf5e6c8 })
-  );
-  awning.position.set(0, Math.max(1.1, height * 0.28), depth * 0.2);
-  building.add(awning);
-
-  return building;
-}
-
-function createTree() {
-  const tree = new THREE.Group();
-  const trunk = new THREE.Mesh(
-    new THREE.BoxGeometry(0.45, 1.1, 0.45),
-    new THREE.MeshLambertMaterial({ color: 0x6d4c41 })
-  );
-  trunk.position.y = 0.55;
-  tree.add(trunk);
-
-  const crown = new THREE.Mesh(
-    new THREE.BoxGeometry(1.6, 1.6, 1.6),
-    new THREE.MeshLambertMaterial({ color: 0x4f9d69 })
-  );
-  crown.position.y = 1.7;
-  tree.add(crown);
-
-  return tree;
-}
-
-function createPole() {
-  const group = new THREE.Group();
-  const post = new THREE.Mesh(
-    new THREE.BoxGeometry(0.18, 2.9, 0.18),
-    new THREE.MeshLambertMaterial({ color: PALETTE.pole })
-  );
-  post.position.y = 1.45;
-  group.add(post);
-
-  const lamp = new THREE.Mesh(
-    new THREE.BoxGeometry(0.55, 0.24, 0.32),
-    new THREE.MeshLambertMaterial({ color: PALETTE.light, emissive: 0x332211, emissiveIntensity: 0.1 })
-  );
-  lamp.position.set(0.3, 2.55, 0);
-  group.add(lamp);
-
-  return group;
-}
-
 function createRoadMark() {
   const mark = new THREE.Mesh(
     new THREE.BoxGeometry(0.22, 0.02, 2),
@@ -127,6 +65,156 @@ function createSign(text, style = 'sign') {
   return group;
 }
 
+function createPole() {
+  const group = new THREE.Group();
+  const post = new THREE.Mesh(
+    new THREE.BoxGeometry(0.18, 2.9, 0.18),
+    new THREE.MeshLambertMaterial({ color: PALETTE.pole })
+  );
+  post.position.y = 1.45;
+  group.add(post);
+
+  const lamp = new THREE.Mesh(
+    new THREE.BoxGeometry(0.55, 0.24, 0.32),
+    new THREE.MeshLambertMaterial({ color: PALETTE.light, emissive: 0x332211, emissiveIntensity: 0.1 })
+  );
+  lamp.position.set(0.3, 2.55, 0);
+  group.add(lamp);
+
+  return group;
+}
+
+function addWindows(building, width, height, depth) {
+  const cols = Math.max(2, Math.floor(width / 1.05));
+  const rows = Math.max(2, Math.floor((height - 1.6) / 1.05));
+  const startY = 1.25;
+  const stepY = 0.95;
+  const stepX = width / (cols + 1);
+  const windowColor = choice(PALETTE.buildingWindow);
+  const windowMaterial = new THREE.MeshLambertMaterial({ color: windowColor });
+
+  for (let row = 0; row < rows; row += 1) {
+    for (let col = 1; col <= cols; col += 1) {
+      const wx = -width / 2 + col * stepX;
+      const wy = startY + row * stepY;
+      if (wy > height - 0.8) {
+        continue;
+      }
+
+      const frontWindow = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.42, 0.08), windowMaterial);
+      frontWindow.position.set(wx, wy, depth / 2 + 0.05);
+      building.add(frontWindow);
+
+      if (row > 0 && col % 2 === 0) {
+        const sideWindow = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.38, 0.32), windowMaterial);
+        sideWindow.position.set(width / 2 + 0.04, wy, -depth / 2 + col * 0.32);
+        building.add(sideWindow);
+      }
+    }
+  }
+}
+
+function createStoreSign(width, height) {
+  const signMaterial = new THREE.MeshLambertMaterial({ color: choice(PALETTE.buildingTrim) });
+  const sign = new THREE.Mesh(new THREE.BoxGeometry(width * 0.84, 0.42, 0.2), signMaterial);
+  sign.position.set(0, Math.max(1.35, height * 0.26), 1.36);
+  return sign;
+}
+
+function createBuildingFacade() {
+  const building = new THREE.Group();
+  const width = rand(2.2, 4.3);
+  const height = rand(3.8, 8.2);
+  const depth = rand(2.0, 3.0);
+
+  const facadeColor = choice(PALETTE.building);
+  const trimColor = choice(PALETTE.buildingTrim);
+  const facade = new THREE.Mesh(
+    new THREE.BoxGeometry(width, height, depth),
+    new THREE.MeshLambertMaterial({ color: facadeColor })
+  );
+  facade.position.y = height / 2;
+  building.add(facade);
+
+  const baseTrim = new THREE.Mesh(
+    new THREE.BoxGeometry(width * 1.02, 0.18, depth * 1.02),
+    new THREE.MeshLambertMaterial({ color: trimColor })
+  );
+  baseTrim.position.y = 0.09;
+  building.add(baseTrim);
+
+  const roofTrim = new THREE.Mesh(
+    new THREE.BoxGeometry(width * 1.02, 0.22, depth * 1.02),
+    new THREE.MeshLambertMaterial({ color: trimColor })
+  );
+  roofTrim.position.y = height + 0.1;
+  building.add(roofTrim);
+
+  const door = new THREE.Mesh(
+    new THREE.BoxGeometry(0.58, 1.1, 0.1),
+    new THREE.MeshLambertMaterial({ color: 0x36251d })
+  );
+  door.position.set(0, 0.58, depth / 2 + 0.06);
+  building.add(door);
+
+  const awning = new THREE.Mesh(
+    new THREE.BoxGeometry(width * 0.92, 0.14, 0.8),
+    new THREE.MeshLambertMaterial({ color: choice(PALETTE.buildingWindow) })
+  );
+  awning.position.set(0, 1.36, depth / 2 + 0.36);
+  building.add(awning);
+
+  if (rand(0, 1) > 0.55) {
+    const balcony = new THREE.Mesh(
+      new THREE.BoxGeometry(width * 0.54, 0.1, 0.62),
+      new THREE.MeshLambertMaterial({ color: trimColor })
+    );
+    balcony.position.set(0, Math.min(height - 0.85, 3.05), depth / 2 + 0.3);
+    building.add(balcony);
+  }
+
+  addWindows(building, width, height, depth);
+  building.add(createStoreSign(width, height));
+
+  return building;
+}
+
+function createBuildingBlock() {
+  const block = new THREE.Group();
+  const count = randInt(2, 3);
+  let cursor = 0;
+
+  for (let i = 0; i < count; i += 1) {
+    const facade = createBuildingFacade();
+    const spread = rand(2.5, 4.1);
+    facade.position.set(cursor, 0, rand(-0.55, 0.55));
+    cursor += spread;
+    block.add(facade);
+  }
+
+  block.position.x = -cursor / 2;
+  return block;
+}
+
+function createTree() {
+  const tree = new THREE.Group();
+  const trunk = new THREE.Mesh(
+    new THREE.BoxGeometry(0.45, 1.1, 0.45),
+    new THREE.MeshLambertMaterial({ color: 0x6d4c41 })
+  );
+  trunk.position.y = 0.55;
+  tree.add(trunk);
+
+  const crown = new THREE.Mesh(
+    new THREE.BoxGeometry(1.6, 1.6, 1.6),
+    new THREE.MeshLambertMaterial({ color: 0x4f9d69 })
+  );
+  crown.position.y = 1.7;
+  tree.add(crown);
+
+  return tree;
+}
+
 function createMarket() {
   const market = new THREE.Group();
   const hall = new THREE.Mesh(
@@ -139,6 +227,13 @@ function createMarket() {
   const sign = createSign('Mercadão', 'billboard');
   sign.position.set(0, 0.2, 1.7);
   market.add(sign);
+
+  const stand = new THREE.Mesh(
+    new THREE.BoxGeometry(4.2, 0.24, 0.9),
+    new THREE.MeshLambertMaterial({ color: 0x5e392f })
+  );
+  stand.position.set(0, 0.5, 1.9);
+  market.add(stand);
 
   return market;
 }
@@ -200,14 +295,20 @@ function createRoadSegment(index) {
     pole.position.set(side * (roadWidth / 2 + 1.45), 0, -4.6);
     segment.add(pole);
 
-    const building = createBuilding();
-    building.position.set(side * buildingOffset, 0, rand(-5.5, 5.5));
-    segment.add(building);
+    const block = createBuildingBlock();
+    block.position.set(side * buildingOffset, 0, rand(-5.5, 5.5));
+    if (side < 0) {
+      block.rotation.y = Math.PI;
+    }
+    segment.add(block);
 
-    const extraBuilding = createBuilding();
-    extraBuilding.scale.set(0.8, 0.8, 0.8);
-    extraBuilding.position.set(side * (buildingOffset + 3.7), 0, rand(-4.2, 5.4));
-    segment.add(extraBuilding);
+    const farBlock = createBuildingBlock();
+    farBlock.scale.set(0.84, 0.84, 0.84);
+    farBlock.position.set(side * (buildingOffset + 4.1), 0, rand(-4.2, 5.4));
+    if (side < 0) {
+      farBlock.rotation.y = Math.PI;
+    }
+    segment.add(farBlock);
 
     const featureRoll = randInt(0, 4);
     let feature;

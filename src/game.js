@@ -9,6 +9,12 @@ import {
 import { checkPlayerVsTraffic } from './collisions.js';
 import { createPlayer } from './player.js';
 import { createRoad } from './road.js';
+import {
+  fetchTopRecords,
+  getStoredUserProfile,
+  isUsingFirebase,
+  saveOrUpdateUserBestScore,
+} from './records.js';
 import { createTrafficSystem } from './traffic.js';
 import { createUI } from './ui.js';
 import { choice, clamp, rand } from './utils.js';
@@ -26,6 +32,7 @@ export class Game {
     this.difficultyLevel = 0;
     this.forwardSpeed = PLAYER_CONFIG.startSpeed;
     this.nextMemeAt = rand(DIFFICULTY_CONFIG.memeMinDelay, DIFFICULTY_CONFIG.memeMaxDelay);
+    this.recordSaved = false;
 
     this.ui = createUI();
     this.player = createPlayer(scene);
@@ -34,7 +41,9 @@ export class Game {
 
     this.setupScene();
     this.bindUI();
+    this.prefillUserName();
     this.reset();
+    this.refreshLeaderboard();
   }
 
   setupScene() {
@@ -48,17 +57,39 @@ export class Game {
     this.scene.fog = new THREE.Fog(0xf1a562, 32, 90);
   }
 
+  prefillUserName() {
+    const profile = getStoredUserProfile();
+    if (profile?.name) {
+      this.ui.setPlayerName(profile.name);
+    }
+  }
+
   bindUI() {
     this.ui.bindStart(() => this.start());
     this.ui.bindRestart(() => {
       this.reset();
       this.start();
     });
+    this.ui.bindBackToMenu(() => {
+      this.reset();
+      this.ui.showStartScreen();
+    });
+    this.ui.bindSaveRecord(() => this.saveCurrentRecord());
+  }
+
+  async refreshLeaderboard() {
+    try {
+      const topRecords = await fetchTopRecords();
+      this.ui.renderLeaderboard(topRecords);
+    } catch {
+      this.ui.renderLeaderboard([]);
+    }
   }
 
   reset() {
     this.isRunning = false;
     this.isGameOver = false;
+    this.recordSaved = false;
     this.elapsedTime = 0;
     this.score = 0;
     this.difficultyLevel = 0;
@@ -72,6 +103,8 @@ export class Game {
     this.ui.hideGameOver();
     this.ui.showStartScreen();
     this.ui.updateHUD(0, 0);
+    this.ui.setSaveEnabled(true);
+    this.ui.setSaveStatus('');
     this.updateCamera();
   }
 
@@ -135,12 +168,53 @@ export class Game {
   triggerGameOver() {
     this.isGameOver = true;
     this.isRunning = false;
+    this.recordSaved = false;
     this.player.setControlsEnabled(false);
+
+    this.ui.setSaveEnabled(true);
+    this.ui.setSaveStatus(
+      isUsingFirebase()
+        ? 'Pronto para salvar no Firebase.'
+        : 'Firebase não configurado: salvando localmente neste navegador.'
+    );
+
     this.ui.showGameOver({
       score: this.score,
       time: this.elapsedTime,
       message: choice(UI_MESSAGES.gameOver),
     });
+  }
+
+  async saveCurrentRecord() {
+    if (!this.isGameOver) {
+      return;
+    }
+
+    if (this.recordSaved) {
+      this.ui.setSaveStatus('Esse recorde já foi salvo.', 'error');
+      return;
+    }
+
+    const name = this.ui.getPlayerName();
+
+    try {
+      const result = await saveOrUpdateUserBestScore({
+        name,
+        score: Math.floor(this.score),
+      });
+      this.recordSaved = true;
+      this.ui.setSaveEnabled(false);
+      this.ui.setPlayerName(result.profile.name);
+      this.ui.setSaveStatus(
+        result.changed
+          ? 'Recorde salvo/atualizado com sucesso.'
+          : 'Seu recorde anterior já é maior ou igual.',
+        result.changed ? 'ok' : 'info'
+      );
+      await this.refreshLeaderboard();
+    } catch {
+      this.ui.setSaveStatus('Falha ao salvar recorde. Confira o Firebase e tente de novo.', 'error');
+    }
   }
 
   updateCamera() {
@@ -152,7 +226,10 @@ export class Game {
   handleResize(width, height) {
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
-    const scale = Math.max(1, Math.floor(Math.min(width / RENDER_CONFIG.internalWidth, height / RENDER_CONFIG.internalHeight)));
+    const scale = Math.max(
+      1,
+      Math.floor(Math.min(width / RENDER_CONFIG.internalWidth, height / RENDER_CONFIG.internalHeight))
+    );
     this.renderer.domElement.style.width = `${RENDER_CONFIG.internalWidth * scale}px`;
     this.renderer.domElement.style.height = `${RENDER_CONFIG.internalHeight * scale}px`;
   }
