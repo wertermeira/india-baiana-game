@@ -524,25 +524,11 @@ textarea {
   text-decoration: underline;
 }
 
-body.game-running .page-shell {
-  padding: 0;
-}
-
 body.game-running #hud-section,
 body.game-running #share-bar,
 body.game-running #home-top5-section,
 body.game-running #creator-credit {
   display: none !important;
-}
-
-body.game-running .game-shell {
-  width: 100%;
-  max-width: 100%;
-  gap: 0;
-}
-
-body.game-running .game-frame {
-  min-height: 100vh;
 }
 
 .arcade-button {

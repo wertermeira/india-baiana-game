@@ -121,7 +121,6 @@ export class Game {
     this.player.setControlsEnabled(false);
     this.road.reset();
     this.traffic.reset();
-    this.exitMobileFullscreen();
     this.ui.hideGameOver();
     this.ui.showStartScreen();
     this.ui.setGameplayUIVisible(false);
@@ -135,7 +134,6 @@ export class Game {
   }
 
   start() {
-    this.enterMobileFullscreen();
     this.isRunning = true;
     this.isGameOver = false;
     this.ui.hideStartScreen();
@@ -201,7 +199,6 @@ export class Game {
     this.player.setControlsEnabled(false);
     this.ui.setGameplayUIVisible(false);
     this.ui.setRecordFormVisible(this.rankingEnabled && !this.hasStoredProfile);
-    this.exitMobileFullscreen();
 
     if (this.rankingEnabled) {
       this.ui.setSaveEnabled(true);
@@ -316,33 +313,6 @@ export class Game {
     const text =
       `Estou jogando India Baiana Driver em Irecê. Vem tentar sobreviver ao trânsito meme! ${gameLink}`;
     await this.shareText(text);
-  }
-
-  isMobileTouchDevice() {
-    return window.matchMedia('(hover: none), (pointer: coarse)').matches;
-  }
-
-  enterMobileFullscreen() {
-    if (!this.isMobileTouchDevice()) {
-      return;
-    }
-
-    const target = document.documentElement;
-    if (document.fullscreenElement || !target.requestFullscreen) {
-      return;
-    }
-
-    target.requestFullscreen().catch(() => {});
-  }
-
-  exitMobileFullscreen() {
-    if (!this.isMobileTouchDevice()) {
-      return;
-    }
-
-    if (document.fullscreenElement && document.exitFullscreen) {
-      document.exitFullscreen().catch(() => {});
-    }
   }
 
   updateCamera() {
