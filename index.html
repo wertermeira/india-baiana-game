@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>India Baiana Driver</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <div class="noise"></div>
+      <main class="game-shell">
+        <section class="hud">
+          <div class="hud__title">
+            <span class="hud__eyebrow">Arcade do caos</span>
+            <h1>India Baiana Driver</h1>
+          </div>
+          <div class="hud__stats">
+            <div class="stat-card">
+              <span class="stat-card__label">Score</span>
+              <strong id="score-value">000000</strong>
+            </div>
+            <div class="stat-card">
+              <span class="stat-card__label">Tempo</span>
+              <strong id="time-value">00:00</strong>
+            </div>
+          </div>
+        </section>
+
+        <div class="game-frame">
+          <div id="game-root" class="game-root"></div>
+          <div id="meme-banner" class="meme-banner" aria-live="polite"></div>
+
+          <div id="start-screen" class="overlay overlay--visible">
+            <div class="panel panel--hero">
+              <p class="panel__kicker">Irecê edition</p>
+              <h2>Sobreviva ao trânsito mais imprevisível do sertão meme.</h2>
+              <p class="panel__text">
+                Desvie de motos costurando, pickups folgadas e contramão premium.
+              </p>
+              <div class="panel__chips">
+                <span>Praça pixelada</span>
+                <span>Mercadão arcade</span>
+                <span>Capital do feijão</span>
+              </div>
+              <button id="start-button" class="arcade-button" type="button">
+                Iniciar corrida
+              </button>
+              <p class="panel__controls">
+                A/D ou setas para virar • W acelera • S freia
+              </p>
+            </div>
+          </div>
+
+          <div id="game-over-screen" class="overlay overlay--hidden">
+            <div class="panel panel--gameover">
+              <p class="panel__kicker">Game over</p>
+              <h2>O trânsito venceu.</h2>
+              <div class="results-grid">
+                <div>
+                  <span>Score final</span>
+                  <strong id="final-score">000000</strong>
+                </div>
+                <div>
+                  <span>Tempo final</span>
+                  <strong id="final-time">00:00</strong>
+                </div>
+              </div>
+              <p id="game-over-message" class="panel__text"></p>
+              <button id="restart-button" class="arcade-button arcade-button--danger" type="button">
+                Jogar novamente
+              </button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
