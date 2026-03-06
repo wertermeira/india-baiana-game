@@ -33,6 +33,8 @@ export class Game {
     this.forwardSpeed = PLAYER_CONFIG.startSpeed;
     this.nextMemeAt = rand(DIFFICULTY_CONFIG.memeMinDelay, DIFFICULTY_CONFIG.memeMaxDelay);
     this.recordSaved = false;
+    this.lastFinishedScore = null;
+    this.hasStoredProfile = false;
 
     this.ui = createUI();
     this.player = createPlayer(scene);
@@ -60,12 +62,14 @@ export class Game {
   prefillUserName() {
     const profile = getStoredUserProfile();
     if (profile?.name) {
+      this.hasStoredProfile = true;
       this.ui.setPlayerName(profile.name);
     }
   }
 
   bindUI() {
     this.ui.bindStart(() => this.start());
+    this.ui.bindShareGlobal(() => this.shareCurrentContext());
     this.ui.bindRestart(() => {
       this.reset();
       this.start();
@@ -90,6 +94,7 @@ export class Game {
     this.isRunning = false;
     this.isGameOver = false;
     this.recordSaved = false;
+    this.lastFinishedScore = null;
     this.elapsedTime = 0;
     this.score = 0;
     this.difficultyLevel = 0;
@@ -100,16 +105,21 @@ export class Game {
     this.player.setControlsEnabled(false);
     this.road.reset();
     this.traffic.reset();
+    this.exitMobileFullscreen();
     this.ui.hideGameOver();
     this.ui.showStartScreen();
     this.ui.setGameplayUIVisible(false);
+    this.ui.setRecordFormVisible(!this.hasStoredProfile);
     this.ui.updateHUD(0, 0);
     this.ui.setSaveEnabled(true);
     this.ui.setSaveStatus('');
+    this.ui.setShareStatus('');
+    this.ui.setShareButtonLabel('Compartilhar jogo');
     this.updateCamera();
   }
 
   start() {
+    this.enterMobileFullscreen();
     this.isRunning = true;
     this.isGameOver = false;
     this.ui.hideStartScreen();
@@ -171,8 +181,11 @@ export class Game {
     this.isGameOver = true;
     this.isRunning = false;
     this.recordSaved = false;
+    this.lastFinishedScore = Math.floor(this.score);
     this.player.setControlsEnabled(false);
     this.ui.setGameplayUIVisible(false);
+    this.ui.setRecordFormVisible(!this.hasStoredProfile);
+    this.exitMobileFullscreen();
 
     this.ui.setSaveEnabled(true);
     this.ui.setSaveStatus(
@@ -186,6 +199,11 @@ export class Game {
       time: this.elapsedTime,
       message: choice(UI_MESSAGES.gameOver),
     });
+    this.ui.setShareButtonLabel('Compartilhar score');
+
+    if (this.hasStoredProfile) {
+      this.autoSaveBestScore();
+    }
   }
 
   async saveCurrentRecord() {
@@ -206,8 +224,10 @@ export class Game {
         score: Math.floor(this.score),
       });
       this.recordSaved = true;
+      this.hasStoredProfile = true;
       this.ui.setSaveEnabled(false);
       this.ui.setPlayerName(result.profile.name);
+      this.ui.setRecordFormVisible(false);
       this.ui.setSaveStatus(
         result.changed
           ? 'Recorde salvo/atualizado com sucesso.'
@@ -217,6 +237,83 @@ export class Game {
       await this.refreshLeaderboard();
     } catch {
       this.ui.setSaveStatus('Falha ao salvar recorde. Confira o Firebase e tente de novo.', 'error');
+    }
+  }
+
+  async autoSaveBestScore() {
+    try {
+      const result = await saveOrUpdateUserBestScore({
+        name: this.ui.getPlayerName(),
+        score: Math.floor(this.score),
+      });
+      this.hasStoredProfile = true;
+      this.ui.setPlayerName(result.profile.name);
+      this.ui.setRecordFormVisible(false);
+      await this.refreshLeaderboard();
+    } catch {
+      // No UI interruption for background sync failure.
+    }
+  }
+
+  async shareText(text) {
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: 'India Baiana Driver',
+          text,
+        });
+        this.ui.setShareStatus('Compartilhado com sucesso.', 'ok');
+        return;
+      }
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(text);
+        this.ui.setShareStatus('Texto copiado. Cole onde quiser compartilhar.', 'ok');
+        return;
+      }
+
+      this.ui.setShareStatus('Não foi possível compartilhar neste dispositivo.', 'error');
+    } catch {
+      this.ui.setShareStatus('Compartilhamento cancelado ou indisponível.', 'error');
+    }
+  }
+
+  async shareCurrentContext() {
+    if (Number.isFinite(this.lastFinishedScore)) {
+      const text = `Consegui ${this.lastFinishedScore} pontos no India Baiana Driver, agora é sua vez!`;
+      await this.shareText(text);
+      return;
+    }
+
+    const text =
+      'Estou jogando India Baiana Driver em Irecê. Vem tentar sobreviver ao trânsito meme!';
+    await this.shareText(text);
+  }
+
+  isMobileTouchDevice() {
+    return window.matchMedia('(hover: none), (pointer: coarse)').matches;
+  }
+
+  enterMobileFullscreen() {
+    if (!this.isMobileTouchDevice()) {
+      return;
+    }
+
+    const target = document.documentElement;
+    if (document.fullscreenElement || !target.requestFullscreen) {
+      return;
+    }
+
+    target.requestFullscreen().catch(() => {});
+  }
+
+  exitMobileFullscreen() {
+    if (!this.isMobileTouchDevice()) {
+      return;
+    }
+
+    if (document.fullscreenElement && document.exitFullscreen) {
+      document.exitFullscreen().catch(() => {});
     }
   }
 

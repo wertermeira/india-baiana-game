@@ -77,21 +77,12 @@
               <p class="panel__text">
                 Desvie de motos costurando, pickups folgadas e contramão premium.
               </p>
-              <div class="panel__chips">
-                <span>Praça pixelada</span>
-                <span>Mercadão arcade</span>
-                <span>Capital do feijão</span>
-              </div>
               <button id="start-button" class="arcade-button w-full sm:w-auto" type="button">
                 Iniciar corrida
               </button>
               <p class="panel__controls">
                 A/D ou setas para virar • W acelera • S freia • no celular use os botões na tela
               </p>
-              <section class="leaderboard-box mt-4">
-                <h3>Top 5</h3>
-                <ol id="top5-start" class="leaderboard-list"></ol>
-              </section>
             </div>
           </div>
 
@@ -111,7 +102,7 @@
               </div>
               <p id="game-over-message" class="panel__text"></p>
 
-              <div class="record-save">
+              <div id="record-save-box" class="record-save">
                 <label for="player-name">Seu nome</label>
                 <div class="record-save__row grid grid-cols-1 sm:grid-cols-[1fr_auto]">
                   <input id="player-name" type="text" maxlength="18" placeholder="Digite seu nome" />
@@ -122,12 +113,7 @@
                 <p id="save-status" class="save-status"></p>
               </div>
 
-              <section class="leaderboard-box leaderboard-box--compact">
-                <h3>Top 5</h3>
-                <ol id="top5-gameover" class="leaderboard-list"></ol>
-              </section>
-
-              <div class="actions-row grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <div class="actions-row grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                 <button id="restart-button" class="arcade-button arcade-button--danger w-full" type="button">
                   Jogar novamente
                 </button>
@@ -138,6 +124,17 @@
             </div>
           </div>
         </div>
+
+        <section class="share-bar">
+          <button id="share-global-button" class="arcade-button arcade-button--ghost w-full sm:w-auto" type="button">
+            Compartilhar jogo
+          </button>
+          <p id="share-status-global" class="share-status"></p>
+        </section>
+        <section id="home-top5-section" class="leaderboard-box home-top5">
+          <h3>Top 5</h3>
+          <ol id="top5-home" class="leaderboard-list"></ol>
+        </section>
       </main>
     </div>
 

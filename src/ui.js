@@ -8,17 +8,19 @@ export function createUI() {
   const memeBanner = document.getElementById('meme-banner');
   const startScreen = document.getElementById('start-screen');
   const gameOverScreen = document.getElementById('game-over-screen');
+  const recordSaveBox = document.getElementById('record-save-box');
   const finalScore = document.getElementById('final-score');
   const finalTime = document.getElementById('final-time');
   const gameOverMessage = document.getElementById('game-over-message');
   const startButton = document.getElementById('start-button');
+  const shareGlobalButton = document.getElementById('share-global-button');
   const restartButton = document.getElementById('restart-button');
   const menuButton = document.getElementById('menu-button');
   const saveRecordButton = document.getElementById('save-record-button');
   const playerNameInput = document.getElementById('player-name');
   const saveStatus = document.getElementById('save-status');
-  const top5Start = document.getElementById('top5-start');
-  const top5GameOver = document.getElementById('top5-gameover');
+  const shareStatusGlobal = document.getElementById('share-status-global');
+  const top5Home = document.getElementById('top5-home');
 
   let memeTimeoutId = null;
 
@@ -28,6 +30,10 @@ export function createUI() {
 
   function bindRestart(handler) {
     restartButton.addEventListener('click', handler);
+  }
+
+  function bindShareGlobal(handler) {
+    shareGlobalButton.addEventListener('click', handler);
   }
 
   function bindBackToMenu(handler) {
@@ -102,50 +108,63 @@ export function createUI() {
     saveRecordButton.disabled = !enabled;
   }
 
+  function setShareStatus(message, kind = 'info') {
+    shareStatusGlobal.textContent = message;
+    shareStatusGlobal.classList.remove('share-status--ok', 'share-status--error');
+    if (kind === 'ok') {
+      shareStatusGlobal.classList.add('share-status--ok');
+    }
+    if (kind === 'error') {
+      shareStatusGlobal.classList.add('share-status--error');
+    }
+  }
+
+  function setShareButtonLabel(text) {
+    shareGlobalButton.textContent = text;
+  }
+
   function setGameplayUIVisible(visible) {
     const method = visible ? 'remove' : 'add';
     hudStats.classList[method]('is-hidden');
     touchControls.classList[method]('is-hidden');
+
+    if (window.matchMedia('(hover: none), (pointer: coarse)').matches) {
+      document.body.classList.toggle('game-running-mobile', visible);
+    }
+  }
+
+  function setRecordFormVisible(visible) {
+    const method = visible ? 'remove' : 'add';
+    recordSaveBox.classList[method]('is-hidden');
   }
 
   function renderLeaderboard(records) {
-    top5Start.innerHTML = '';
-    top5GameOver.innerHTML = '';
+    top5Home.innerHTML = '';
 
     if (!records.length) {
-      const empty1 = document.createElement('li');
-      empty1.textContent = 'Nenhum recorde salvo ainda.';
-      const empty2 = document.createElement('li');
-      empty2.textContent = 'Nenhum recorde salvo ainda.';
-      top5Start.appendChild(empty1);
-      top5GameOver.appendChild(empty2);
+      const empty = document.createElement('li');
+      empty.textContent = 'Nenhum recorde salvo ainda.';
+      top5Home.appendChild(empty);
       return;
     }
 
     records.forEach((record, index) => {
-      const entryStart = document.createElement('li');
-      const entryGameOver = document.createElement('li');
+      const entry = document.createElement('li');
 
       const text = `${index + 1}. ${record.name} - ${record.score} `;
-      const metaStart = document.createElement('span');
-      metaStart.className = 'leaderboard-meta';
-      metaStart.textContent = `(${record.dateLabel})`;
+      const meta = document.createElement('span');
+      meta.className = 'leaderboard-meta';
+      meta.textContent = `(${record.dateLabel})`;
 
-      const metaGameOver = document.createElement('span');
-      metaGameOver.className = 'leaderboard-meta';
-      metaGameOver.textContent = `(${record.dateLabel})`;
-
-      entryStart.append(document.createTextNode(text), metaStart);
-      entryGameOver.append(document.createTextNode(text), metaGameOver);
-
-      top5Start.appendChild(entryStart);
-      top5GameOver.appendChild(entryGameOver);
+      entry.append(document.createTextNode(text), meta);
+      top5Home.appendChild(entry);
     });
   }
 
   return {
     bindStart,
     bindRestart,
+    bindShareGlobal,
     bindBackToMenu,
     bindSaveRecord,
     updateHUD,
@@ -158,7 +177,10 @@ export function createUI() {
     setPlayerName,
     setSaveStatus,
     setSaveEnabled,
+    setShareStatus,
+    setShareButtonLabel,
     setGameplayUIVisible,
+    setRecordFormVisible,
     renderLeaderboard,
   };
 }

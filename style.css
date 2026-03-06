@@ -354,20 +354,24 @@ textarea {
 .results-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-  margin: 22px 0;
+  gap: 8px;
+  margin: 14px 0;
 }
 
 .results-grid div {
-  padding: 12px;
-  border: 4px solid rgba(126, 224, 255, 0.75);
+  padding: 8px;
+  border: 3px solid rgba(126, 224, 255, 0.75);
   background: rgba(15, 34, 58, 0.5);
 }
 
 .results-grid strong {
   display: block;
-  margin-top: 8px;
-  font-size: 2rem;
+  margin-top: 4px;
+  font-size: 1.25rem;
+}
+
+.results-grid span {
+  font-size: 0.86rem;
 }
 
 .record-save {
@@ -401,6 +405,20 @@ textarea {
   min-height: 1.2em;
   margin: 8px 0 0;
   color: #ffe9b5;
+}
+
+.share-status {
+  min-height: 1.2em;
+  margin: 8px 0 0;
+  color: #cfe6ff;
+}
+
+.share-status--ok {
+  color: var(--success);
+}
+
+.share-status--error {
+  color: #ffc7c7;
 }
 
 .save-status--ok {
@@ -447,6 +465,18 @@ textarea {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
   margin-top: 14px;
+}
+
+.share-bar {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.home-top5 {
+  margin-top: 8px;
 }
 
 .arcade-button {
@@ -570,8 +600,17 @@ textarea {
   }
 
   .record-save label,
-  .save-status {
+  .save-status,
+  .share-status {
     font-size: 0.9rem;
+  }
+
+  .results-grid strong {
+    font-size: 1.05rem;
+  }
+
+  .results-grid span {
+    font-size: 0.75rem;
   }
 
   .record-save input {
@@ -622,5 +661,28 @@ textarea {
 
   .game-frame {
     min-height: 78vh;
+  }
+
+  body.game-running-mobile .page-shell {
+    padding: 0;
+  }
+
+  body.game-running-mobile .hud,
+  body.game-running-mobile .share-bar,
+  body.game-running-mobile .home-top5 {
+    display: none !important;
+  }
+
+  body.game-running-mobile .game-shell {
+    width: 100%;
+    max-width: 100%;
+    gap: 0;
+  }
+
+  body.game-running-mobile .game-frame {
+    min-height: 100dvh;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
   }
 }
